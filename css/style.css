@@ -55,18 +55,28 @@ button:focus-visible {
 
 /* ===== Выпадающее меню ===== */
 .dropdown-menu {
-  position: relative;
+    --panel-w: min(280px, 85vw);   /* ширина панели, общая для панели и кнопки */
+    --speed: 0.3s;
 }
 
 .dropdown-icon {
-  display: flex;
-  padding: 0.4rem;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  color: var(--color-text);
-  cursor: pointer;
+    position: fixed;
+    top: 16px;
+    right: 0;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: none;
+    border-radius: 12px 0 0 12px;   /* скруглена только слева, справа прилегает к краю */
+    background: #fff;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+
+    transition: transform var(--speed) ease;
 }
+
 
 .dropdown-icon:hover {
   background: var(--color-bg);
@@ -78,38 +88,53 @@ button:focus-visible {
 }
 
 .dropdown-list {
-  display: none;
-  position: absolute;
-  top: calc(100% + 0.5rem);
+  position: fixed;
+  top: 0;
   right: 0;
-  z-index: 10;
-  min-width: 12rem;
-  margin: 0;
-  padding: 0.5rem;
-  list-style: none;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  box-shadow: 0 8px 24px rgba(27, 42, 65, 0.12);
+  width: var(--panel-w);
+  height: 100vh;
+    margin: 0;
+    padding: 80px 24px 24px;
+    box-sizing: border-box;
+    list-style: none;
+    background: #fff;
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform var(--speed) ease, visibility var(--speed);
+  }
+
+  .dropdown-list.open {
+    transform: translateX(0);
+    visibility: visible;
 }
 
-/* Класс .open будет добавлять JS при нажатии на кнопку */
-.dropdown-list.open {
-  display: block;
+.dropdown-list.open + .dropdown-icon {
+    transform: translateX(calc(-1 * var(--panel-w)));
 }
 
-.dropdown-list a {
-  display: block;
-  padding: 0.6rem 0.75rem;
-  border-radius: 8px;
-  color: var(--color-text);
-  text-decoration: none;
+/* Пункты: текст и иконка строго справа */
+.dropdown-list li a {
+    display: flex;
+    justify-content: flex-end;   /* всё прижато к правому краю */
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    text-align: right;
+    text-decoration: none;
+    color: inherit;
 }
 
-.dropdown-list a:hover {
-  background: var(--color-bg);
-  color: var(--color-accent);
+/* Иконки: одинаковый размер для svg и png */
+.dropdown-list li a img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;   /* не искажает пропорции */
+    flex-shrink: 0;        /* не сжимается при длинном тексте */
 }
+
 
 /* ===== Главная страница ===== */
 .main-page {
